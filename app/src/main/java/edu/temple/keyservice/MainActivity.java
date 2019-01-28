@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
     KeyService mService;
     boolean mBound = false;
     boolean finishedEncrypt = false;
-    Button encryptButton, decryptButton;
+    Button getKeysButton, encryptButton, decryptButton;
     EditText messageText;
-    TextView encryptResult, decryptResult;
+    TextView encryptResult, decryptResult, privateText, publicText;
     byte [] encryptedBytes, decryptedBytes;
     String encrypted, decrypted;
 
@@ -37,11 +37,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getKeysButton = findViewById(R.id.button);
         encryptButton = findViewById(R.id.encryptButton);
         decryptButton = findViewById(R.id.decryptButton);
         messageText = findViewById(R.id.encryptMessageEditText);
         encryptResult = findViewById(R.id.encryptedMessageText);
         decryptResult = findViewById(R.id.decryptedMessageText);
+        privateText = findViewById(R.id.privateKeyText);
+        publicText = findViewById(R.id.pubicKeyText);
+
+
+        getKeysButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBound) {
+                    try {
+                        mService.getMyKeyPair();
+                        privateText.setText(mService.getMyKeyPair().getPrivate().toString());
+                        publicText.setText(mService.getMyKeyPair().getPublic().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
 
         encryptButton.setOnClickListener(new View.OnClickListener() {
             @Override
